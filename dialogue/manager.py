@@ -83,12 +83,7 @@ class DialogueManager:
         if current_input_is_mazhab:
             self.state = self.state.update_mazhab(current_input_category)
 
-        thread_history = self._prepare_thread_history()
-        thread_result = self.classifiers_chains.classify_thread(user_input=processed_input, thread_history=json.dumps(thread_history))
-        thread_type = thread_result.get("thread_type", "new")
-        related_thread_ids = thread_result.get("related_thread_ids", [])
-
-        related_threads = self._get_related_threads(related_thread_ids=related_thread_ids)
+       
 
         if intent in ["question", "command"]:
             if is_fatwa_type:
@@ -101,6 +96,8 @@ class DialogueManager:
                 response = random.choice(SYSTEM_PROMPTS["conditional_prompts"]["invalid"])
                 global_history.append(("Sheikh", response))
             else:
+
+                # START FROM HERE
                 state["question_threads"].append({"thread_id": thread_id, "question": processed_input, "rag_response": None, "follow_ups": []})
                 state["retries"] = 0
 
