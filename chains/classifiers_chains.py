@@ -1,13 +1,11 @@
 from langchain.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSequence, RunnableParallel
-from config.settings import get_settings
 from config.system_prompts import SYSTEM_PROMPTS
 from llms import Models
 from utils.parsers import parse_json_output
 
 class ClassifiersChains:
     def __init__(self):
-        self.settings = get_settings()
         self.models = Models.create_llms()
         self._init_prompts()
         self._init_chains()
@@ -52,7 +50,7 @@ class ClassifiersChains:
         )
     
     def _init_chains(self):
-        """Initialize all classifier chains"""
+        # Initialize all classifier chains
         # Single classifier chains
         self.filter_chain = RunnableSequence(
             self.filter_prompt | 
@@ -76,7 +74,7 @@ class ClassifiersChains:
         # Classify user input intent
         return self.filter_chain.invoke({"input": user_input})
 
-    def classify_fiqh_parallel(self, user_input: str):
+    def classify_parallel(self, user_input: str):
         # Run parallel classification for fiqh, mazhab, and fatwa
         return self.parallel_classifiers.invoke({"input": user_input})
     
